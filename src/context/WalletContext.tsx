@@ -34,11 +34,12 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
   // Check for saved wallet on mount
   useEffect(() => {
     const savedAddress = localStorage.getItem('walletAddress');
+    const savedProvider = localStorage.getItem('walletProvider');
     if (savedAddress) {
       setAddress(savedAddress);
-      setBalance('0.5'); // Mock balance
+      setBalance(savedProvider === 'phantom' ? '2.45' : '0.5'); // Mock balance based on provider
       setIsConnected(true);
-      toast.success("Wallet reconnected", {
+      toast.success(`${savedProvider === 'phantom' ? 'Phantom' : 'Wallet'} reconnected`, {
         description: `Connected to ${savedAddress.substring(0, 6)}...${savedAddress.substring(savedAddress.length - 4)}`,
       });
     }
@@ -48,6 +49,24 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     try {
       setIsConnecting(true);
       
+      // Check if Phantom is available for Phantom connections
+      if (provider === 'phantom') {
+        // In a real app, we would use the actual Phantom wallet API
+        const isPhantomAvailable = window.hasOwnProperty('solana') || window.hasOwnProperty('phantom');
+        
+        if (!isPhantomAvailable) {
+          toast.error("Phantom wallet not found", {
+            description: "Please install the Phantom wallet extension first.",
+            action: {
+              label: "Install",
+              onClick: () => window.open("https://phantom.app/download", "_blank"),
+            },
+          });
+          setIsConnecting(false);
+          return;
+        }
+      }
+      
       // Simulate wallet connection
       await new Promise(resolve => setTimeout(resolve, 1500));
       
@@ -56,18 +75,20 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
         'metamask': '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
         'walletconnect': '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0',
         'coinbase': '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-        'phantom': '0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8'
+        'phantom': 'FbmHEgjZL1bHmS3SfnrJgcbJK1HvzYQgUZSxwzWcjmKz'
       };
       
       const newAddress = mockAddresses[provider] || '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
       
       setAddress(newAddress);
-      setBalance('0.5'); // Mock ETH balance
+      setBalance(provider === 'phantom' ? '2.45' : '0.5'); // Mock balance based on provider
       setIsConnected(true);
       localStorage.setItem('walletAddress', newAddress);
+      localStorage.setItem('walletProvider', provider);
       
-      toast.success("Wallet Connected", {
+      toast.success(`${provider === 'phantom' ? 'Phantom' : 'Wallet'} Connected`, {
         description: `Connected to ${newAddress.substring(0, 6)}...${newAddress.substring(newAddress.length - 4)}`,
+        icon: provider === 'phantom' ? "✨" : undefined,
       });
     } catch (error) {
       console.error('Error connecting wallet:', error);
@@ -84,6 +105,7 @@ export const WalletProvider = ({ children }: WalletProviderProps) => {
     setBalance('0');
     setIsConnected(false);
     localStorage.removeItem('walletAddress');
+    localStorage.removeItem('walletProvider');
     toast.info("Wallet disconnected");
   };
   

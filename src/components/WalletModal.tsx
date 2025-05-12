@@ -19,11 +19,17 @@ interface WalletModalProps {
 
 const walletOptions = [
   {
+    id: 'phantom',
+    name: 'Phantom',
+    icon: '/phantom.svg',
+    description: 'Connect to your Phantom wallet (Recommended)',
+    popular: true
+  },
+  {
     id: 'metamask',
     name: 'MetaMask',
     icon: '/metamask.svg',
-    description: 'Connect to your MetaMask wallet',
-    popular: true
+    description: 'Connect to your MetaMask wallet'
   },
   {
     id: 'walletconnect',
@@ -36,12 +42,6 @@ const walletOptions = [
     name: 'Coinbase Wallet',
     icon: '/coinbase.svg',
     description: 'Connect to your Coinbase wallet'
-  },
-  {
-    id: 'phantom',
-    name: 'Phantom',
-    icon: '/phantom.svg',
-    description: 'Connect to your Phantom wallet'
   }
 ];
 
@@ -60,7 +60,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-eternavault-dark border-eternavault-accent/20 text-white backdrop-blur-xl">
+      <DialogContent className="sm:max-w-md bg-[#13151c] border-purple-500/20 text-white backdrop-blur-xl shadow-lg shadow-purple-500/10">
         <DialogHeader>
           <DialogTitle className="text-xl font-heading">
             {isConnected ? 'Wallet Connected' : 'Connect Your Wallet'}
@@ -77,12 +77,12 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                 <div className="p-3 rounded-full bg-green-500/20 mb-2">
                   <Check className="h-6 w-6 text-green-500" />
                 </div>
-                <h3 className="text-lg font-semibold font-heading">Connected</h3>
+                <h3 className="text-lg font-semibold font-heading">Connected to Phantom</h3>
                 <p className="text-sm text-gray-300">
                   {address?.substring(0, 10)}...{address?.substring(address.length - 8)}
                 </p>
-                <div className="bg-eternavault-accent/10 px-4 py-2 rounded-full text-eternavault-accent font-medium">
-                  {balance} ETH
+                <div className="bg-indigo-500/10 px-4 py-2 rounded-full text-indigo-300 font-medium">
+                  {balance} SOL
                 </div>
               </div>
             </GlassmorphicCard>
@@ -90,10 +90,10 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
             <Button
               onClick={handleDisconnect}
               variant="outline"
-              className="w-full border-eternavault-accent/30 hover:bg-eternavault-accent/10"
+              className="w-full border-red-500/30 hover:bg-red-500/10 text-red-400 hover:text-red-300"
             >
               <X className="mr-2 h-4 w-4" />
-              Disconnect
+              Disconnect Wallet
             </Button>
           </div>
         ) : (
@@ -104,33 +104,35 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                 onClick={() => handleConnect(wallet.id)}
                 disabled={isConnecting}
                 className={`relative flex items-center p-4 rounded-lg transition-all ${
-                  isConnecting
-                    ? 'bg-eternavault-accent/5 cursor-not-allowed'
-                    : 'bg-eternavault-accent/10 hover:bg-eternavault-accent/20 cursor-pointer'
+                  wallet.id === 'phantom' 
+                    ? 'bg-gradient-to-r from-purple-500/20 to-indigo-500/20 hover:from-purple-500/30 hover:to-indigo-500/30 animate-glow'
+                    : isConnecting
+                      ? 'bg-indigo-500/5 cursor-not-allowed'
+                      : 'bg-indigo-500/10 hover:bg-indigo-500/20 cursor-pointer'
                 }`}
               >
                 <div className="mr-4 h-10 w-10 flex items-center justify-center bg-white/10 rounded-md">
-                  <Wallet className="h-5 w-5 text-eternavault-accent" />
+                  <img src={wallet.icon} alt={wallet.name} className="h-6 w-6" />
                 </div>
                 <div className="flex-1 text-left">
                   <div className="flex items-center">
                     <h3 className="font-semibold">{wallet.name}</h3>
                     {wallet.popular && (
-                      <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-eternavault-blue/20 text-eternavault-blue">
-                        Popular
+                      <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-purple-500/20 text-purple-300">
+                        Recommended
                       </span>
                     )}
                   </div>
                   <p className="text-sm text-gray-400">{wallet.description}</p>
                 </div>
                 {isConnecting ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-eternavault-accent" />
+                  <Loader2 className="h-5 w-5 animate-spin text-purple-400" />
                 ) : (
-                  <ArrowRight className="h-5 w-5 text-eternavault-accent" />
+                  <ArrowRight className="h-5 w-5 text-purple-400" />
                 )}
                 
                 {/* Hover effect */}
-                <div className="absolute inset-0 rounded-lg border border-eternavault-accent/0 hover:border-eternavault-accent/50 transition-all duration-300"></div>
+                <div className="absolute inset-0 rounded-lg border border-purple-500/0 hover:border-purple-500/50 transition-all duration-300"></div>
               </button>
             ))}
           </div>

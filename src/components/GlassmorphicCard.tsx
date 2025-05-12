@@ -6,6 +6,8 @@ interface GlassmorphicCardProps extends React.HTMLAttributes<HTMLDivElement> {
   intensity?: 'light' | 'medium' | 'strong';
   hoverEffect?: boolean;
   animate?: boolean;
+  neonBorder?: boolean;
+  glowEffect?: boolean;
 }
 
 const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
@@ -14,6 +16,8 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
   intensity = 'medium',
   hoverEffect = true,
   animate = false,
+  neonBorder = false,
+  glowEffect = false,
   ...props
 }) => {
   const intensityClasses = {
@@ -25,10 +29,12 @@ const GlassmorphicCard: React.FC<GlassmorphicCardProps> = ({
   return (
     <div
       className={cn(
-        'rounded-xl backdrop-blur-md border shadow-lg',
+        'rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300',
         intensityClasses[intensity],
-        hoverEffect && 'transition-all duration-300 hover:shadow-xl hover:border-white/20',
-        animate && 'animate-float',
+        hoverEffect && 'hover:shadow-xl hover:border-white/20 hover:bg-white/[0.12] hover:scale-[1.01]',
+        animate && 'animate-float-slow',
+        neonBorder && 'neon-border',
+        glowEffect && 'animate-glow',
         className
       )}
       {...props}

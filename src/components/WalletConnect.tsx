@@ -17,8 +17,8 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onClick }) => {
         onClick={onClick}
         className={`group relative overflow-hidden rounded-full shadow-lg transition-transform hover:scale-105 ${
           isConnected
-            ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500'
-            : 'bg-gradient-to-r from-eternavault-accent to-eternavault-blue hover:from-eternavault-accent/90 hover:to-eternavault-blue/90'
+            ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500'
+            : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400'
         }`}
         size="lg"
       >
@@ -31,7 +31,7 @@ const WalletConnect: React.FC<WalletConnectProps> = ({ onClick }) => {
             {address?.substring(0, 6)}...{address?.substring(address.length - 4)}
           </span>
         ) : (
-          <span>Connect Wallet</span>
+          <span>Connect Phantom</span>
         )}
       </Button>
     </div>
